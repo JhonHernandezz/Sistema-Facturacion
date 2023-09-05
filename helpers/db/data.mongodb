@@ -1,0 +1,396 @@
+//mongodb+srv://latinoamericacampus233:Campus*2023@cluster0.e7umrrf.mongodb.net/
+//mongodb+srv://ma98030965140:Campus*2023@cluster0.aenymrf.mongodb.net/
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.insertMany(
+    [
+        {
+            ID_proveedor: 1,
+            nombre_proveedor: "Distribuidora las torres",
+            telefono: "+57 3005544147",
+            direccion: "Calle 56 # 16 - 45 Bucaramanga - Santander"
+        },
+        {
+            ID_proveedor: 2,
+            nombre_proveedor: "Distribuidora las relliquias",
+            telefono: "+57 3414651656",
+            direccion: "Calle 61 # 14 - 45 Rio negro"
+        },
+        {
+            ID_proveedor: 3,
+            nombre_proveedor: "Distribuidora los canelles",
+            telefono: "+57 4456446411",
+            direccion: "Calle 1 # 12 - 45 Medellin"
+        },
+        {
+            ID_proveedor: 4,
+            nombre_proveedor: "Distribuidora Zafiro",
+            telefono: "+57 3146513144",
+            direccion: "Calle 48 # 22 - 45 Bucaramanga - Santander"
+        },
+        {
+            ID_proveedor: 5,
+            nombre_proveedor: "Distribuidora Martha",
+            telefono: "+57 3552155422",
+            direccion: "Calle 88 # 82 - 45 Lebrija - Santander"
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.insertMany(
+    [
+        {
+            ID_medicamento: 1,
+            nombre_medicamento: "Acetaminofen",
+            descripcion: "Sirve para todo milagroso",
+            stock: 120,
+            valor_unidad: 12000
+        },
+        {
+            ID_medicamento: 2,
+            nombre_medicamento: "Dolex",
+            descripcion: "Para la congestion general",
+            stock: 12,
+            valor_unidad: 22000
+        },
+        {
+            ID_medicamento: 3,
+            nombre_medicamento: "Azitromicina",
+            descripcion: "Para el dolor del cuerpo",
+            stock: 45,
+            valor_unidad: 20003
+        },
+        {
+            ID_medicamento: 4,
+            nombre_medicamento: "Ibuprofeno",
+            descripcion: "Para el dolor de cara",
+            stock: 180,
+            valor_unidad: 42000
+        },
+        {
+            ID_medicamento: 5,
+            nombre_medicamento: "Noraber",
+            descripcion: "Para el dolor de cabeza",
+            stock: 1,
+            valor_unidad: 52000
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.compras.insertMany(
+    [
+        {
+            ID: 1,
+            id_proveedor: 1,
+            id_medicamento: 2,
+            cantidad_medicamento: 12,
+            fecha_compra: "2023-09-12",
+            valor_compra: 1200
+        },
+        {
+            ID: 2,
+            id_proveedor: 2,
+            id_medicamento: 3,
+            cantidad_medicamento: 21,
+            fecha_compra: "2023-09-14",
+            valor_compra: 32000
+        },
+        {
+            ID: 3,
+            id_proveedor: 3,
+            id_medicamento: 1,
+            cantidad_medicamento: 32,
+            fecha_compra: "2023-09-20",
+            valor_compra: 45000
+        },
+        {
+            ID: 4,
+            id_proveedor: 4,
+            id_medicamento: 2,
+            cantidad_medicamento: 43,
+            fecha_compra: "2023-09-31",
+            valor_compra: 120000
+        },
+        {
+            ID: 5,
+            id_proveedor: 5,
+            id_medicamento: 5,
+            cantidad_medicamento: 54,
+            fecha_compra: "2023-09-15",
+            valor_compra: 25300
+        },
+        {
+            ID: 6,
+            id_proveedor: 6,
+            id_medicamento: 4,
+            cantidad_medicamento: 65,
+            fecha_compra: "2023-09-18",
+            valor_compra: 96000
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.ventas.insertMany(
+    [
+        {
+            ID: 1,
+            id_empleado: 1,
+            id_medicamento: 2,
+            cantidad_medicamento: 12,
+            fecha_venta: "2023-09-12",
+            valor_venta: 1200
+        },
+        {
+            ID: 2,
+            id_empleado: 2,
+            id_medicamento: 3,
+            cantidad_medicamento: 21,
+            fecha_venta: "2023-09-14",
+            valor_venta: 32000
+        },
+        {
+            ID: 3,
+            id_empleado: 3,
+            id_medicamento: 1,
+            cantidad_medicamento: 32,
+            fecha_venta: "2023-09-20",
+            valor_venta: 45000
+        },
+        {
+            ID: 4,
+            id_empleado: 5,
+            id_medicamento: 2,
+            cantidad_medicamento: 43,
+            fecha_venta: "2023-09-31",
+            valor_venta: 120000
+        },
+        {
+            ID: 5,
+            id_empleado: 1,
+            id_medicamento: 5,
+            cantidad_medicamento: 54,
+            fecha_venta: "2023-09-15",
+            valor_venta: 25300
+        },
+        {
+            ID: 6,
+            id_empleado: 3,
+            id_medicamento: 4,
+            cantidad_medicamento: 65,
+            fecha_venta: "2023-09-18",
+            valor_venta: 96000
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.informes.insertMany(
+    [
+        {
+            ID_informe: 1,
+            id_medicamento: 2,
+            tipo_informe: "venta",
+            descripcion: "Se vende 12 medicamentos",
+            fecha_eventualidad: "2023-09-12",
+        },
+        {
+            ID_informe: 2,
+            id_medicamento: 3,
+            tipo_informe: "venta",
+            descripcion: "Se vende 21 medicamentos",
+            fecha_eventualidad: "2023-09-14"
+        },
+        {
+            ID_informe: 3,
+            id_medicamento: 1,
+            tipo_informe: "caducidad",
+            descripcion: "Se vende 12 medicamentos",
+            fecha_eventualidad: "2024-09-20",
+        },
+        {
+            ID_informe: 4,
+            id_medicamento: 2,
+            tipo_informe: "venta",
+            descripcion: "Se vende 12 medicamentos",
+            fecha_eventualidad: "2023-09-31",
+        },
+        {
+            ID_informe: 5,
+            id_medicamento: 5,
+            tipo_informe: "caducidad",
+            descripcion: "Se vende 12 medicamentos",
+            fecha_eventualidad: "2023-09-15",
+        },
+        {
+            ID_informe: 6,
+            id_medicamento: 4,
+            tipo_informe: "caducidad",
+            descripcion: "Se vende 12 medicamentos",
+            fecha_eventualidad: "2023-09-18",
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.empleados.insertMany(
+    [
+        {
+            ID_empleado: 1,
+            nombre_empleado: "Jhon Almeida",
+            direccion: "Calle 58 # 12 - 45",
+            telefono: "+63 5645411114",
+            cargo: "asistente"
+        },
+        {
+            ID_empleado: 2,
+            nombre_empleado: "Carlos Villafrades",
+            direccion: "Calle 58 # 12 - 49",
+            telefono: "+57 1456541514",
+            cargo: "enfermera jefe"
+        },
+        {
+            ID_empleado: 3,
+            nombre_empleado: "Nicolas Caicedo",
+            direccion: "Calle 58 # 12 - 53",
+            telefono: "+57 1545641641",
+            cargo: "doctor cirujano",
+        },
+        {
+            ID_empleado: 4,
+            nombre_empleado: "Ricardo Montaner",
+            direccion: "Calle 58 # 12 - 96",
+            telefono: "+57 1564561614",
+            cargo: "doctor general",
+        },
+        {
+            ID_empleado: 5,
+            nombre_empleado: "Ricardo Arjona",
+            direccion: "Calle 58 # 13 - 15",
+            telefono: "+57 3312115645",
+            cargo: "enfermera auxiliar",
+        },
+        {
+            ID_empleado: 6,
+            nombre_empleado: "Patricio Estrella",
+            direccion: "Calle 58 # 62 - 49",
+            telefono: "+57 3005552125",
+            cargo: "enfermera de turno",
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.pacientes.insertMany(
+    [
+        {
+            ID_paciente: 1,
+            nombre_paciente: "Camilo Almeida",
+            direccion: "Calle 58 # 12 - 45",
+            telefono: "+63 5645411114"
+        },
+        {
+            ID_paciente: 2,
+            nombre_paciente: "Santiago Villafrades",
+            direccion: "Calle 58 # 12 - 49",
+            telefono: "+57 1456541514"
+        },
+        {
+            ID_paciente: 3,
+            nombre_paciente: "Ricado Caicedo",
+            direccion: "Calle 58 # 12 - 53",
+            telefono: "+57 1545641641"
+        },
+        {
+            ID_paciente: 4,
+            nombre_paciente: "Patricio Montaner",
+            direccion: "Calle 58 # 12 - 96",
+            telefono: "+57 1564561614"
+        },
+        {
+            ID_paciente: 5,
+            nombre_paciente: "Martha Arjona",
+            direccion: "Calle 58 # 13 - 15",
+            telefono: "+57 3312115645"
+        },
+        {
+            ID_paciente: 6,
+            nombre_paciente: "Camila Estrella",
+            direccion: "Calle 58 # 62 - 49",
+            telefono: "+57 3005552125"
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.citas.insertMany(
+    [
+        {
+            ID_cita: 1,
+            ID_empleado: 1,
+            ID_paciente: 1,
+            receta: "Tomar reposo",
+            fecha_receta: "2023-08-12",
+        },
+        {
+            ID_cita: 2,
+            ID_empleado: 4,
+            ID_paciente: 2,
+            receta: "Tomar este ibuprofeno cada cierto tiempo",
+            fecha_receta: "2023-07-15",
+        },
+        {
+            ID_cita: 3,
+            ID_empleado: 2,
+            ID_paciente: 3,
+            receta: "Incapacidad",
+            fecha_receta: "2023-04-12",
+        },
+        {
+            ID_cita: 4,
+            ID_empleado: 3,
+            ID_paciente: 4,
+            receta: "Llego tomando medicamentos que le daban alergia",
+            fecha_receta: "2023-10-18",
+        },
+        {
+            ID_cita: 5,
+            ID_empleado: 5,
+            ID_paciente: 5,
+            receta: "Ibuprofeno 800 cada 12 horas",
+            fecha_receta: "2023-08-14",
+        },
+        {
+            ID_cita: 6,
+            ID_empleado: 1,
+            ID_paciente: 6,
+            receta: "Para la casa",
+            fecha_receta: "2023-05-18"
+        }
+    ]
+)
+
+use("facturacionCampus_JhonAlmeida")
+db.roles.insertMany(
+    [
+        {
+            ID_rol: 1,
+            nombre_rol: "admin",
+            user: "admin",
+            password: "1",
+            permisos: {
+                "/consultas": ["2.0.0"]
+            }
+        },
+        {
+            ID_rol: 2,
+            nombre_rol: "empleado",
+            user: "empleado",
+            password: "2",
+            permisos: {
+                "/consultas": ["1.0.0"]
+            }
+        }
+    ]
+)

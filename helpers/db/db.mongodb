@@ -1,0 +1,323 @@
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("proveedor", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID_proveedor", "nombre_proveedor", "telefono", "direccion"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID_proveedor: {
+                    bsonType: "int",
+                    description: "El ID_proveedor is required"
+                },
+                nombre_proveedor: {
+                    bsonType: "string",
+                    description: "El nombre_proveedor is required"
+                },
+                telefono: {
+                    bsonType: "string",
+                    description: "El telefono is required"
+                },
+                direccion: {
+                    bsonType: "string",
+                    description: "El direccion is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("medicamentos", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID_medicamento", "nombre_medicamento", "descripcion", "stock", "valor_unidad"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID_medicamento: {
+                    bsonType: "int",
+                    description: "El ID_medicamento is required"
+                },
+                nombre_medicamento: {
+                    bsonType: "string",
+                    description: "El nombre_medicamento is required"
+                },
+                descripcion: {
+                    bsonType: "string",
+                    description: "El descripcion is required"
+                },
+                stock: {
+                    bsonType: "int",
+                    description: "El stock is required"
+                },
+                valor_unidad: {
+                    bsonType: "int",
+                    description: "El valor_unidad is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("compras", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID", "id_proveedor", "id_medicamento", "cantidad_medicamento", "fecha_compra", "valor_compra"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID: {
+                    bsonType: "int",
+                    description: "El ID is required"
+                },
+                id_proveedor: {
+                    bsonType: "int",
+                    description: "El id_proveedor is required"
+                },
+                id_medicamento: {
+                    bsonType: "int",
+                    description: "El id_medicamento is required"
+                },
+                cantidad_medicamento: {
+                    bsonType: "int",
+                    description: "El cantidad_medicamento is required"
+                },
+                fecha_compra: {
+                    bsonType: "string",
+                    description: "El fecha_compra is required"
+                },
+                valor_compra: {
+                    bsonType: "int",
+                    description: "El valor_compra is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("ventas", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID", "id_empleado", "id_medicamento", "cantidad_medicamento", "fecha_venta", "valor_venta"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID: {
+                    bsonType: "int",
+                    description: "El ID is required"
+                },
+                id_empleado: {
+                    bsonType: "int",
+                    description: "El id_empleado is required"
+                },
+                id_medicamento: {
+                    bsonType: "int",
+                    description: "El id_medicamento is required"
+                },
+                cantidad_medicamento: {
+                    bsonType: "int",
+                    description: "El cantidad_medicamento is required"
+                },
+                fecha_venta: {
+                    bsonType: "string",
+                    description: "El fecha_venta is required"
+                },
+                valor_venta: {
+                    bsonType: "int",
+                    description: "El valor_venta is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("informes", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID_informe", "id_medicamento", "tipo_informe", "descripcion", "fecha_eventualidad"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID_informe: {
+                    bsonType: "int",
+                    description: "El ID_informe is required"
+                },
+                id_medicamento: {
+                    bsonType: "int",
+                    description: "El id_medicamento is required"
+                },
+                tipo_informe: {
+                    bsonType: "string",
+                    description: "El tipo_informe is required"
+                },
+                descripcion: {
+                    bsonType: "string",
+                    description: "El descripcion is required"
+                },
+                fecha_eventualidad: {
+                    bsonType: "string",
+                    description: "El fecha_eventualidad is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("empleados", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID_empleado", "nombre_empleado", "direccion", "telefono", "cargo"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID_empleado: {
+                    bsonType: "int",
+                    description: "El ID_empleado is required"
+                },
+                nombre_empleado: {
+                    bsonType: "string",
+                    description: "El nombre_empleado is required"
+                },
+                direccion: {
+                    bsonType: "string",
+                    description: "El direccion is required"
+                },
+                telefono: {
+                    bsonType: "string",
+                    description: "El telefono is required"
+                },
+                cargo: {
+                    bsonType: "string",
+                    description: "El cargo is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("pacientes", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID_paciente", "nombre_paciente", "direccion", "telefono"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID_paciente: {
+                    bsonType: "int",
+                    description: "El ID_paciente is required"
+                },
+                nombre_paciente: {
+                    bsonType: "string",
+                    description: "El nombre_paciente is required"
+                },
+                direccion: {
+                    bsonType: "string",
+                    description: "El direccion is required"
+                },
+                telefono: {
+                    bsonType: "string",
+                    description: "El telefono is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("citas", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID_cita", "ID_empleado", "ID_paciente", "receta", "fecha_receta"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID_cita: {
+                    bsonType: "int",
+                    description: "El ID_cita is required"
+                },
+                ID_empleado: {
+                    bsonType: "int",
+                    description: "El ID_empleado is required"
+                },
+                ID_paciente: {
+                    bsonType: "int",
+                    description: "El ID_paciente is required"
+                },
+                receta: {
+                    bsonType: "string",
+                    description: "El receta is required"
+                },
+                fecha_receta: {
+                    bsonType: "string",
+                    description: "El fecha_receta is required"
+                }
+            }
+        }
+    }
+})
+
+use("facturacionCampus_JhonAlmeida")
+db.createCollection("roles", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            additionalProperties: false,
+            required: ["ID_rol", "nombre_rol", "user", "password", "permisos"],
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                ID_rol: {
+                    bsonType: "int",
+                    description: "El ID_rol is required"
+                },
+                nombre_rol: {
+                    bsonType: "string",
+                    description: "El nombre_rol is required"
+                },
+                user: {
+                    bsonType: "string",
+                    description: "El user is required"
+                },
+                password: {
+                    bsonType: "string",
+                    description: "El password is required"
+                },
+                permisos: {
+                    bsonType: "object",
+                    description: "El permisos is required"
+                }
+            }
+        }
+    }
+})

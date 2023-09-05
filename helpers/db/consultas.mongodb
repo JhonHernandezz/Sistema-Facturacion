@@ -1,0 +1,570 @@
+
+
+// CONSULTAS ----------------------------------------------------------
+//1. Obtener todos los medicamentos con menos de 50 unidades en stock
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [
+        {
+            $match: {
+              stock: {$lt : 50} 
+            }
+        },
+        {
+            $project: {
+              _id: 0
+            }
+        }
+    ]
+)
+
+//2. Listar los proveedores con su información de contacto en medicamentos
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.aggregate(
+    [
+        {
+            $lookup: {
+              from: "medicamentos",
+              localField: "ID_proveedor",
+              foreignField: "ID_medicamento",
+              as: "fk_proveedor_medicamento"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_proveedor_medicamento._id": 0
+            }
+        }
+    ]
+)
+
+//3. Medicamentos comprados al 'Proveedor A'
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.aggregate(
+    [
+        {
+            $match: {
+                nombre_proveedor: /Distribuidora las torres/
+            }
+        },
+        {
+            $lookup: {
+              from: "medicamentos",
+              localField: "ID_proveedor",
+              foreignField: "ID_medicamento",
+              as: "fk_proveedor_medicamento"
+            }
+        },
+        {
+            $lookup: {
+              from: "compras",
+              localField: "fk_proveedor_medicamento.ID_medicamento",
+              foreignField: "id_medicamento",
+              as: "fk_medicamento_compras"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_proveedor_medicamento._id": 0,
+              "fk_medicamento_compras._id": 0,
+              "fk_medicamento_compras.id_medicamento": 0,
+              "fk_medicamento_compras.id_proveedor": 0,
+            }
+        }
+    ]
+)
+
+//4. Obtener recetas médicas emitidas después del 1 de enero de 2023
+use("facturacionCampus_JhonAlmeida")
+db.citas.aggregate(
+    [
+        {
+            $match: {
+                fecha_receta: { $gte: "2023-08-12"}
+            }
+        },
+        {
+            $project: {
+              _id: 0
+            }
+        }
+    ]
+)
+
+//5. Total de ventas del medicamento 'Paracetamol'
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [
+        {
+            $match: {
+                nombre_medicamento: /Ibuprofeno/
+            }
+        },
+        {
+            $lookup: {
+              from: "ventas",
+              localField: "ID_medicamento",
+              foreignField: "id_medicamento",
+              as: "fk_medicamento_ventas"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_medicamento_ventas._id": 0,
+              "fk_medicamento_ventas.id_medicamento": 0,
+            }
+        }
+    ]
+)
+
+//6. Medicamentos que caducan antes del 1 de enero de 2024
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [
+        {
+            $lookup: {
+              from: "informes",
+              localField: "ID_medicamento",
+              foreignField: "id_medicamento",
+              as: "fk_medicamento_informes"
+            }
+        },
+        {
+            $unwind: "$fk_medicamento_informes"
+        },
+        {
+            $match: {
+              "fk_medicamento_informes.fecha_eventualidad": {$lt : "2023-09-20"},
+              "fk_medicamento_informes.tipo_informe": "caducidad"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_medicamento_informes._id": 0
+            }
+        }
+    ]
+)
+
+//7. Total de medicamentos vendidos por cada proveedor
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.aggregate(
+    [
+        {
+            $lookup: {
+              from: "compras",
+              localField: "ID_proveedor",
+              foreignField: "id_proveedor",
+              as: "fk_proveedor_compras"
+            }
+        },
+        {
+            $unwind: "$fk_proveedor_compras"
+        },
+        {
+            $group: {
+                _id: "$ID_proveedor",
+                "ID_proveedor": { $first : "$ID_proveedor"},
+                "nombre_proveedor": { $first : "$nombre_proveedor"},
+                "telefono": { $first : "$telefono"},
+                "direccion": { $first : "$direccion"},
+                "Total_medicamentos": { $sum: "$fk_proveedor_compras.cantidad_medicamento"}
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_medicamento_informes._id": 0
+            }
+        }
+    ]
+)
+
+//8. Cantidad total de dinero recaudado por las ventas de medicamentos
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [
+        {
+            $lookup: {
+              from: "ventas",
+              localField: "ID_medicamento",
+              foreignField: "id_medicamento",
+              as: "fk_empleados_ventas"
+            }
+        },
+        {
+            $unwind: "$fk_empleados_ventas"
+        },
+        {
+            $group: {
+                _id: "$ID_medicamento",
+                "ID_medicamento": {$first: "$ID_medicamento"},
+                "nombre_medicamento": {$first: "$nombre_medicamento"},
+                "stock": {$first: "$stock"},
+                "Cantidad_total_dinero": { $sum: "$fk_empleados_ventas.valor_venta"}
+            }
+        }
+    ]
+)
+
+//9. Recetas prescritas por el Dr. Martínez
+use("facturacionCampus_JhonAlmeida")
+db.empleados.aggregate(
+    [
+        {
+            $match: {
+                nombre_empleado: /Carlos/
+            }
+        },
+        {
+            $lookup: {
+              from: "citas",
+              localField: "ID_empleado",
+              foreignField: "ID_empleado",
+              as: "fk_empleados_citas"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_empleados_citas._id": 0,
+              "fk_empleados_citas.ID_empleado": 0,
+            }
+        }
+    ]
+)
+
+//--------------
+//10. Medicamentos que no han sido vendidos
+//--------------
+
+//--------------
+//11. Obtener el medicamento más caro
+//--------------
+
+//12. Número de medicamentos por proveedor
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.aggregate(
+    [
+        {
+            $lookup: {
+              from: "compras",
+              localField: "ID_proveedor",
+              foreignField: "id_proveedor",
+              as: "fk_proveedor_compras"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_proveedor_compras._id": 0,
+              "fk_proveedor_compras.ID": 0,
+              "fk_proveedor_compras.valor_compra": 0,
+              "fk_proveedor_compras.id_proveedor": 0
+            }
+        }
+    ]
+)
+
+//--------------
+//13. Pacientes que han comprado Paracetamol
+//--------------
+
+//--------------
+//14. Proveedores que no han vendido medicamentos en el último año
+//--------------
+
+//--------------
+//15. Obtener el total de medicamentos vendidos en marzo de 2023
+//--------------
+
+//--------------
+//16. Obtener el medicamento menos vendido en 2023
+//--------------
+
+//17. Ganancia total por proveedor en 2023 (asumiendo un campo precioCompra en Compras)
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.aggregate(
+    [
+        {
+            $lookup: {
+              from: "compras",
+              localField: "ID_proveedor",
+              foreignField: "id_proveedor",
+              as: "fk_proveedor_compras"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_proveedor_compras._id": 0,
+              "fk_proveedor_compras.ID": 0,
+              "fk_proveedor_compras.id_proveedor": 0,
+              "fk_proveedor_compras.id_medicamento": 0,
+              "fk_proveedor_compras.cantidad_medicamento": 0,
+              "fk_proveedor_compras.fecha_compra": 0,
+            }
+        },
+        {
+            $project: {
+                ID_proveedor: 1,
+                nombre_proveedor: 1,
+                telefono: 1,
+                direccion: 1,
+                "Ganancia_Total": "$fk_proveedor_compras.valor_compra"
+            }
+        }
+    ]
+)
+
+//18. Promedio de medicamentos comprados por venta
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [
+        {
+            $lookup: {
+              from: "ventas",
+              localField: "ID_medicamento",
+              foreignField: "id_medicamento",
+              as: "fk_medicamentos_ventas"
+            }
+        },
+        {
+            $project: {
+              _id: 0,
+              "fk_medicamentos_ventas._id": 0,
+              "fk_medicamentos_ventas.ID": 0,
+              "fk_medicamentos_ventas.id_medicamento": 0,
+              "fk_medicamentos_ventas.fecha_venta": 0,
+              "fk_medicamentos_ventas.valor_venta": 0,
+            }
+        },
+        {
+            $project: {
+                ID_medicamento: 1,
+                nombre_medicamento: 1,
+                descripcion: 1,
+                stock: 1,
+                "Cantidad_Total_Medicamentos_Ventas": "$fk_medicamentos_ventas.cantidad_medicamento"
+            }
+        }
+    ]
+)
+
+//19. Medicamentos que tienen menos de 50 unidades en stock
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [ 
+        {
+            $match: {
+                stock: {$lt: 50}
+            }
+        },
+        {
+            $project: {
+              _id: 0
+            }
+        } 
+    ]
+)
+
+//20. Cantidad de ventas realizadas por cada empleado en 2023
+use("facturacionCampus_JhonAlmeida")
+db.empleados.aggregate(
+    [ 
+        {
+            $lookup: {
+              from: "ventas",
+              localField: "ID_empleado",
+              foreignField: "id_empleado",
+              as: "fk_proveedor_informes"
+            }
+        },
+        {
+            $unwind: "$fk_proveedor_informes"
+        },
+        {
+            $match: {
+              fk_proveedor_informes: { $exists: true}
+            }
+        },
+        {
+            $group: {
+              _id: "$ID_empleado",
+              "Cantidad_Ventas": { $push: "$fk_proveedor_informes.ID"}
+            }
+        }
+    ]
+)
+
+//21. Obtener todos los medicamentos que expiren en 2024
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [ 
+        {
+            $lookup: {
+              from: "informes",
+              localField: "ID_medicamento",
+              foreignField: "id_medicamento",
+              as: "fk_medicamentos_informes"
+            }
+        },
+        {
+            $match: {
+              "fk_medicamentos_informes.tipo_informe": "caducidad",
+              "fk_medicamentos_informes.fecha_eventualidad": {$gte : "2024-01-01"}
+            }
+        },
+        {
+            $project: {
+              _id: 0
+            }
+        } 
+    ]
+)
+
+//--------------
+//22. Empleados que hayan hecho más de 5 ventas en total
+//--------------
+
+//--------------
+//23. Medicamentos que no han sido vendidos nunca
+//--------------
+
+//--------------
+//24. Paciente que ha gastado más dinero en 2023
+//--------------
+
+//--------------
+//25. Empleados que no han realizado ninguna venta en 2023
+
+//--------------
+//26. Proveedor que ha suministrado más medicamentos en 2023
+//--------------
+
+//--------------
+//27. Pacientes que compraron el medicamento "Paracetamol" en 2023
+//--------------
+
+//--------------
+//28. Total de medicamentos vendidos por mes en 2023
+//--------------
+
+//--------------
+//29. Empleados con menos de 5 ventas en 2023
+//--------------
+
+//30. Número total de proveedores que suministraron medicamentos en 2023
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.aggregate(
+    [ 
+        {
+            $lookup: {
+              from: "compras",
+              localField: "ID_proveedor",
+              foreignField: "id_proveedor",
+              as: "Cantidad_proveedores"
+            }
+        },
+        {
+            $count: "Cantidad_proveedores"
+        }
+    ]
+)
+
+//31. Proveedores de los medicamentos con menos de 50 unidades en stock
+use("facturacionCampus_JhonAlmeida")
+db.proveedor.aggregate(
+    [ 
+        {
+            $lookup: {
+              from: "compras",
+              localField: "ID_proveedor",
+              foreignField: "id_proveedor",
+              as: "fk_proveedor_compras"
+            }
+        },
+        {
+            $unwind: "$fk_proveedor_compras"
+        },
+        {
+            $lookup: {
+              from: "medicamentos",
+              localField: "fk_proveedor_compras.id_medicamento",
+              foreignField: "ID_medicamento",
+              as: "fk_compras_medicamentos"
+            }
+        },
+        {
+            $unwind: "$fk_compras_medicamentos"
+        },
+        {
+            $match: {
+                "fk_compras_medicamentos.stock": {$lt: 13}
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                "fk_proveedor_compras": 0,
+                "fk_compras_medicamentos._id": 0,
+                "fk_compras_medicamentos.descripcion": 0,
+                "fk_compras_medicamentos.valor_unidad": 0,
+            }
+        }
+    ]
+)
+
+//--------------
+//32. Pacientes que no han comprado ningún medicamento en 2023
+//--------------
+
+//--------------
+//33. Medicamentos que han sido vendidos cada mes del año 2023
+//--------------
+
+//--------------
+//34. Empleado que ha vendido la mayor cantidad de medicamentos distintos en 2023
+//--------------
+
+//--------------
+//35. Total gastado por cada paciente en 2023
+//--------------
+
+//--------------
+//36. Medicamentos que no han sido vendidos en 2023
+//--------------
+
+//--------------
+//37. Proveedores que han suministrado al menos 5 medicamentos diferentes en 2023
+//--------------
+
+//--------------
+//38. Total de medicamentos vendidos en el primer trimestre de 2023
+//--------------
+
+//--------------
+//39. Empleados que no realizaron ventas en abril de 2023
+//--------------
+
+//40. Medicamentos con un precio mayor a 50 y un stock menor a 100
+use("facturacionCampus_JhonAlmeida")
+db.medicamentos.aggregate(
+    [ 
+        {
+            $match: {
+                valor_unidad: { $gte: 50},
+                stock: { $lt: 100}
+            }
+        },
+        {
+            $project: {
+                _id: 0
+            }
+        }
+    ]
+)
