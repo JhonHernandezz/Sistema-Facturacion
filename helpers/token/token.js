@@ -8,9 +8,13 @@ let db = await con();
 export let generarToken = async(req, res, next) => {
     if(Object.keys(req.body).length === 0) return res.status(200).send({status: 402, message: "No ha enviado los datos pertinentes"})
 
-    const { User, Password } = req.body;
+    let { User, Password } = req.body;
 
-    //Generar la consulta de que si el usuario y la contraseña son correctos
+    let data = await db.collection("roles").findOne(
+        {
+            user: User, password: Password
+        }
+    )
 
     if(!data) return res.status(200).send({status: 402, message: "El usuario o la contraseña estan incorrectos"})
     
@@ -32,8 +36,12 @@ export let validarToken = async(req, token) => {
         const encoder = new TextEncoder()
         const jwtData = await jwtVerify(token, encoder.encode(my_jwt))
 
-        //Generar la consulta y comprobar 
-        //EL ID y los permisos
+        let res = await db.collection("roles").findOne(
+            {
+                _id: new ObjectId(jwtData.payload.data._id),
+                [`permisos.${req.baseUrl}`]: `${req.headers["accept-version"]}`
+            }
+        )
 
         let { _id, permisos, ...usuario} = res;
 
